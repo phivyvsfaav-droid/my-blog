@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Adventure Profile</title>
+    <!-- 引入圆润可爱的字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #E60012; /* Nintendo Red */
+            --sky-blue: #4facfe;
+            --cloud-white: #ffffff;
+            --text-dark: #4a4a4a;
+            --accent-yellow: #FFD700;
+            --card-shadow: 0 8px 0 rgba(0,0,0,0.1);
+            --btn-shadow: 0 6px 0 #9e000c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(180deg, var(--sky-blue) 0%, #00f2fe 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            color: var(--text-dark);
+            /* 添加动态云朵背景 */
+            background-image: 
+                radial-gradient(circle 20px at 10% 10%, rgba(255,255,255,0.4) 100%, transparent),
+                radial-gradient(circle 30px at 80% 20%, rgba(255,255,255,0.4) 100%, transparent);
+            background-size: 100% 100%;
+        }
+
+        /* 主容器：类似 Switch 的屏幕 */
+        .game-container {
+            width: 90%;
+            max-width: 900px;
+            height: 650px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 40px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2), inset 0 0 0 8px #fff;
+            position: relative;
+            overflow: hidden;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            border: 8px solid #fff;
+        }
+
+        /* --- 场景 1: 标题画面 --- */
+        #intro-scene {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55), opacity 0.5s;
+        }
+
+        .logo-title {
+            font-family: 'Fredoka One', cursive;
+            font-size: 4rem;
+            color: var(--primary-red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            /* 文字描边效果 */
+            -webkit-text-stroke: 2px #fff;
+            text-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+            animation: float 3s ease-in-out infinite;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            background: #fff;
+            padding: 10px 20px;
+            border-radius: 20px;
+            color: var(--sky-blue);
+            font-weight: 800;
+            box-shadow: var(--card-shadow);
+            transform: rotate(-2deg);
+            margin-bottom: 50px;
+        }
+
+        .start-btn {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.5rem;
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 15px 60px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: var(--btn-shadow);
+            transition: transform 0.1s, box-shadow 0.1s;
+            position: relative;
+            top: 0;
+        }
+
+        .start-btn:active {
+            top: 6px;
+            box-shadow: 0 0 0 #9e000c;
+        }
+
+        .start-btn:hover {
+            filter: brightness(1.1);
+        }
+
+        /* --- 场景 2: 个人档案 (类似动森背包) --- */
+        #main-scene {
+            display: none;
+            height: 100%;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            opacity: 0;
+            transform: scale(0.9);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* 左侧卡片 */
+        .profile-card {
+            background: #fff;
+            border-radius: 30px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--card-shadow);
+            border: 4px solid var(--sky-blue);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .avatar-frame {
+            width: 160px;
+            height: 160px;
+            background: #ffecb3; /* 柔和的黄色背景 */
+            border-radius: 50%;
+            margin-bottom: 20px;
+            border: 6px solid #fff;
+            box-shadow: 0 0 0 4px var(--accent-yellow);
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .avatar-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .name-tag {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.8rem;
+            color: var(--text-dark);
+            margin-bottom: 5px;
+        }
+
+        .job-tag {
+            background: var(--accent-yellow);
+            color: #795548;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: 800;
+            font-size: 0.9rem;
+        }
+
+        /* 右侧内容 */
+        .content-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        /* 自定义滚动条 */
+        .content-panel::-webkit-scrollbar {
+            width: 10px;
+        }
+        .content-panel::-webkit-scrollbar-thumb {
+            background: var(--sky-blue);
+            border-radius: 10px;
+        }
+
+        .section-box {
+            background: #fff;
+            border-radius: 25px;
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+        }
+
+        h2 {
+            font-family: 'Fredoka One', cursive;
+            color: var(--sky-blue);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 技能条风格 */
+        .skill-row {
+            margin-bottom: 12px;
+        }
+        .skill-name {
+            font-weight: 800;
+            color: #666;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .progress-bg {
+            height: 16px;
+            background: #eee;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #e0e0e0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                var(--primary-red),
+                var(--primary-red) 10px,
+                #ff4d5a 10px,
+                #ff4d5a 20px
+            );
+            border-radius: 10px;
+            width: 0%; /* JS 动画控制 */
+            transition: width 1.5s ease-out;
+        }
+
+        /* 按钮组 */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .nintendo-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            background: #f0f0f0;
+            color: var(--text-dark);
+            padding: 15px;
+            border-radius: 20px;
+            font-weight: 800;
+            transition: all 0.2s;
+            border: 2px solid #ddd;
+        }
+
+        .nintendo-btn:hover {
+            background: var(--sky-blue);
+            color: #fff;
+            border-color: var(--sky-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 0 rgba(0,0,0,0.1);
+        }
+        
+        .resume-btn {
+            background-color: var(--accent-yellow);
+            color: #5d4037;
+            border-color: #fbc02d;
+        }
+        .resume-btn:hover {
+            background-color: #fdd835;
+            color: #3e2723;
+        }
+
+        /* 动画 Keyframes */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            .game-container {
+                height: 100%;
+                width: 100%;
+                border-radius: 0;
+                border: none;
+                padding: 20px;
+            }
+            #main-scene {
+                grid-template-columns: 1fr;
+                overflow-y: auto;
+                padding-bottom: 50px;
+            }
+            .logo-title { font-size: 2.5rem; }
+            .profile-card { margin-bottom: 10px; }
+        }
+
+        .hidden { display: none !important; }
+        .visible { display: grid !important; opacity: 1 !important; transform: scale(1) !important; }
+    </style>
+</head>
+<body>
+
+    <div class="game-container">
+        
+        <!-- 1. 初始界面 -->
+        <div id="intro-scene">
+            <div class="logo-title">欧阳松的<br>个人主页</div>
+            <div class="subtitle">Level 24 Designer</div>
+            <br>
+            <button class="start-btn" onclick="enterWorld()">
+                PRESS A TO START
+            </button>
+        </div>
+
+        <!-- 2. 个人主页界面 -->
+        <div id="main-scene">
+            
+            <!-- 左侧：角色卡 -->
+            <div class="profile-card">
+                <div class="avatar-frame">
+                    <!-- 使用了更卡通的头像风格 -->
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=transparent" alt="Avatar">
+                </div>
+                <h1 class="name-tag">欧阳松</h1>
+                <span class="job-tag">UI / UX Designer</span>
+                
+                <div style="margin-top: 30px; width: 100%;">
+                    <p style="font-weight:800; color:#ccc; margin-bottom:10px;">FRIEND CODE</p>
+                    <p style="font-size:0.9rem; background:#f0f0f0; padding:10px; border-radius:10px;">SW-1234-5678</p>
+                </div>
+            </div>
+
+            <!-- 右侧：信息面板 -->
+            <div class="content-panel">
+                
+                <!-- 简介 -->
+                <div class="section-box">
+                    <h2>🍄 ABOUT ME</h2>
+                    <p style="line-height: 1.6; color: #555;">
+                        Hello! 我是一名热衷于创造有趣交互体验的设计师。就像马力欧收集金币一样，我也在不断收集新的技能点！<br><br>
+                        目前正在寻找新的冒险机会。
+                    </p>
+                </div>
+
+                <!-- 技能 -->
+                <div class="section-box">
+                    <h2>⭐ POWER UPS</h2>
+                    
+                    <div class="skill-row">
+                        <span class="skill-name">Figma / UI Design</span>
+                        <div class="progress-bg">
+                            <div class="progress-fill" style="width: 95%"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-row">
+                        <span class="skill-name">HTML & CSS</span>
+                        <div class="progress-bg">
+                            <div class="progress-fill" style="width: 80%; background: var(--sky-blue);"></div>
+                        </div>
+                    </div>
+
+                    <div class="skill-row">
+                        <span class="skill-name">JavaScript</span>
+                        <div class="progress-bg">
+                            <div class="progress-fill" style="width: 60%; background: var(--accent-yellow);"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 下载与联系 -->
+                <div class="section-box">
+                    <h2>🎒 INVENTORY</h2>
+                    <div class="action-buttons">
+                        <!-- 运营行业专业简历 -->
+                        <a href="resume.pdf" target="_blank" class="nintendo-btn resume-btn">
+                            📄 获取简历 PDF
+                        </a>
+                        <a href="mailto:test@test.com" class="nintendo-btn">
+                            📧 发送邮件
+                        </a>
+                        <a href="#" class="nintendo-btn">
+                            🐙 GitHub
+                        </a>
+                        <a href="#" class="nintendo-btn">
+                            💬 WeChat
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 音效 (推荐找一个类似马里奥顶金币或确认的声音) -->
+    <audio id="coin-sound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"></audio>
+
+    <script>
+        function enterWorld() {
+            const intro = document.getElementById('intro-scene');
+            const main = document.getElementById('main-scene');
+            const audio = document.getElementById('coin-sound');
+
+            // 播放音效
+            try { 
+                audio.volume = 0.4;
+                audio.play(); 
+            } catch(e) {}
+
+            // 1. 标题向上飞出，按钮消失
+            intro.style.transform = 'translateY(-100vh)';
+            intro.style.opacity = '0';
+
+            setTimeout(() => {
+                intro.classList.add('hidden');
+                main.classList.remove('hidden');
+                
+                // 强制浏览器回流 (Reflow) 以触发过渡动画
+                void main.offsetWidth; 
+                
+                // 2. 主界面弹入
+                main.classList.add('visible');
+
+                // 3. 触发进度条动画 (让它们动起来)
+                const fills = document.querySelectorAll('.progress-fill');
+                fills.forEach(fill => {
+                    // 重新应用宽度以触发 transition
+                    const width = fill.style.width;
+                    fill.style.width = '0';
+                    setTimeout(() => fill.style.width = width, 300);
+                });
+
+            }, 400);
+        }
+    </script>
+</body>
+</html>
